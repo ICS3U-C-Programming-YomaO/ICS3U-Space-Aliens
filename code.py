@@ -114,6 +114,9 @@ def menu_scene():
 def game_scene():
     # this function is for the main game game_scene
 
+    # for score
+    score = 0
+
     # function loops through all aliens and checks if an alien
     # has a position of < 0 and if it does ands takes it and puts it in a
     # random x position, and y will be at the top
@@ -248,7 +251,25 @@ def game_scene():
                 )
 
                 show_alien()
-
+        # each frame check if any of the lasers are touching any of the aliens
+        for laser_number in range(len(lasers)):
+            if lasers[laser_number].x > 0:
+                for alien_number in range(len(aliens)):
+                    if aliens[alien_number].x > 0:
+                        if stage.collide(lasers[laser_number].x + 6, lasers[laser_number].y + 2,
+                                        lasers[laser_number].x + 11, lasers[laser_number].y + 12,
+                                        aliens[alien_number].x + 1, aliens[alien_number].y + 1,
+                                        aliens[alien_number].x + 15, aliens[alien_number].y + 15):
+                            # you hit an alien
+                            aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+                            lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
+                                # get sound ready
+                            boom_sound = open("boom.wav", 'rb')
+                            sound = ugame.audio
+                            sound.stop()
+                            sound.mute(False)
+                            sound.play(boom_sound)
+                            score = score + 1
         #redraw sprite
         # redraws game sprites
         game.render_sprites(aliens + lasers + [ship])
