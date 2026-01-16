@@ -116,7 +116,12 @@ def game_scene():
 
     # for score
     score = 0
-
+    # score settings: this will print and show player their score
+    score_text = stage.Text(width=29, height=14)
+    score_text.clear()
+    score_text.cursor(0, 0)
+    score_text.move(1, 1)
+    score_text.text("Score: {0}".format(score))
     # function loops through all aliens and checks if an alien
     # has a position of < 0 and if it does ands takes it and puts it in a
     # random x position, and y will be at the top
@@ -175,7 +180,7 @@ def game_scene():
     game = stage.Stage(ugame.display, constants.FPS)
 
     # set the layers of all sprites, items show up in order
-    game.layers = aliens + lasers + [ship] + [background]
+    game.layers = [score_text] + aliens + lasers + [ship] + [background]
     # render all sprites
     # most likely you will only render the background  once per game scene
     game.render_block()
@@ -247,10 +252,16 @@ def game_scene():
             )
 
                 if aliens[alien_number].y > constants.SCREEN_Y:
-                    aliens[alien_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y
-                )
-
+                    aliens[alien_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y)
                 show_alien()
+                score = score - 1
+                if score < 0:
+                    score = 0
+                score_text.clear()
+                score_text.cursor(0, 0)
+                score_text.move(1, 1)
+                score_text.text("My Score: {0}".format(score))
+
         # each frame check if any of the lasers are touching any of the aliens
         for laser_number in range(len(lasers)):
             if lasers[laser_number].x > 0:
@@ -269,10 +280,16 @@ def game_scene():
                             sound.stop()
                             sound.mute(False)
                             sound.play(boom_sound)
+                            show_alien()
+                            show_alien()
                             score = score + 1
+                            score_text.clear()
+                            score_text.cursor(0, 0)
+                            score_text.move(1, 1)
+                            score_text.text("My Score: {0}".format(score))
         #redraw sprite
         # redraws game sprites
-        game.render_sprites(aliens + lasers + [ship])
+        game.render_sprites( aliens + lasers + [ship])
         game.tick()
 if __name__ == "__main__":
     menu_scene()

@@ -226,8 +226,7 @@ def game_scene():
             )
 
                 if aliens[alien_number].y > constants.SCREEN_Y:
-                    aliens[alien_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y
-                )
+                    aliens[alien_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y)
 
                 show_alien()
                 score = score - 2
