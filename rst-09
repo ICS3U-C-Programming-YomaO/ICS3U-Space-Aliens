@@ -27,35 +27,9 @@ def splash_scene():
     # https://ezgif.com/sprite-cutter/ezgif-5-818cdbcc3f66.png
     background.tile(2, 2, 0)   # blank white
     background.tile(3, 2, 1)
-    background.tile(4, 2, 2)
-    background.tile(5, 2, 3)
-    background.tile(6, 2, 4)
-    background.tile(7, 2, 0)   # blank white
 
-
-    background.tile(2, 3, 0)   # blank white
-    background.tile(3, 3, 5)
-    background.tile(4, 3, 6)
-    background.tile(5, 3, 7)
-    background.tile(6, 3, 8)
-    background.tile(7, 3, 0)   # blank white
-
-
-    background.tile(2, 4, 0)   # blank white
-    background.tile(3, 4, 9)
-    background.tile(4, 4, 10)
-    background.tile(5, 4, 11)
-    background.tile(6, 4, 12)
-    background.tile(7, 4, 0)   # blank white
-
-
-    background.tile(2, 5, 0)   # blank white
-    background.tile(3, 5, 0)
-    background.tile(4, 5, 13)
-    background.tile(5, 5, 14)
     background.tile(6, 5, 0)
     background.tile(7, 5, 0)   # blank white
-
     game = stage.Stage(ugame.display, constants.FPS)
     # set the layers of all sprites, items show up in order
     game.layers = [background]
@@ -68,7 +42,7 @@ def splash_scene():
         # wait for 2 seconds and then goes to the menu scene, 
         # it'll be a blank white scene
         time.sleep(2.0)
-        menu_scene()
+        menu_scene
 
 
 def menu_scene():
@@ -178,9 +152,9 @@ def game_scene():
         if keys & ugame.K_X != 0:
             pass
         if keys & ugame.K_START != 0:
-            pass
+            print("Start")
         if keys & ugame.K_SELECT != 0:
-            pass
+            print("Select")
         if keys & ugame.K_RIGHT != 0:
             # this code makes the sprite have boundaries, if it reaches the sides 
             # of the grid
@@ -220,7 +194,7 @@ def game_scene():
 
         #redraw sprite
         # redraws game sprites
-        game.render_sprites(lasers + [ship] + [alien])
+        game.render_sprites([ship] + [alien])
         game.tick()
 if __name__ == "__main__":
     menu_scene()
