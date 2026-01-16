@@ -240,8 +240,7 @@ def game_scene():
         # if it goes off the top screen moves it back to holding.
         for laser_number in range(len(lasers)):
             if lasers[laser_number].x > 0:
-                lasers[laser_number].move(lasers[laser_number].x,lasers[laser_number].y - constants.LASER_SPEED
-        )
+                lasers[laser_number].move(lasers[laser_number].x,lasers[laser_number].y - constants.LASER_SPEED)
 
                 if lasers[laser_number].y < constants.OFF_TOP_SCREEN:
                     lasers[laser_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y)
@@ -292,11 +291,11 @@ def game_scene():
                 if stage.collide(aliens[alien_number].x + 1,aliens[alien_number].y, aliens[alien_number].x + 15,
                                 aliens[alien_number].y + 15,
                                 ship.x,ship.y,ship.x + 15,ship.y + 15):
-                # alien hit the ship
-                sound.stop()
-                sound.play(crash_sound)
-                time.sleep(3.0)
-                game_over_scene(score)
+                    # alien hit the ship
+                    sound.stop()
+                    sound.play(crash_sound)
+                    time.sleep(3.0)
+                    game_over_scene(score)
         #redraw sprite
         # redraws game sprites
         game.render_sprites( aliens + lasers + [ship])
