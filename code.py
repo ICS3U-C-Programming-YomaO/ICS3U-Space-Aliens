@@ -8,15 +8,6 @@ import supervisor
 def splash_scene():
     # this function is for the main game splash_scene
 
-    # get sound ready
-    coin_sound = open("coin.wav", 'rb')
-    boom_sound = open("boom.wav", 'rb')
-    crash_sound = open("crash.wav", 'rb')
-    sound = ugame.audio
-    sound.stop()
-    sound.mute(False)
-    sound.play(coin_sound)
-
     # image banks for CircuitPython stores the images in bmp file
     # an image bank for CircuitPython
     image_bank_mt_background = stage.Bank.from_bmp16("mt_game_studio.bmp")
@@ -150,9 +141,13 @@ def game_scene():
 
     # get sound ready
     pew_sound = open("pew.wav",'rb')
+    coin_sound = open("coin.wav", 'rb')
+    boom_sound = open("boom.wav", 'rb')
+    crash_sound = open("crash.wav", 'rb')
     sound = ugame.audio
     sound.stop()
     sound.mute(False)
+    sound.play(coin_sound)
     # set the background to image 0 in the image bank
     # and the size (10x8 tiles of size 16x16)
     background = stage.Grid(image_bank_background, constants.SCREEN_GRID_X, constants.SCREEN_GRID_Y)
@@ -179,7 +174,7 @@ def game_scene():
     lasers = []
     for laser_number in range(constants.TOTAL_NUMBER_OF_LASERS):
         a_single_laser = stage.Sprite(image_bank_sprites,10,constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y)
-    lasers.append(a_single_laser)
+        lasers.append(a_single_laser)
     game = stage.Stage(ugame.display, constants.FPS)
 
     # set the layers of all sprites, items show up in order
@@ -276,7 +271,7 @@ def game_scene():
                             # you hit an alien
                             aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
                             lasers[laser_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
-                                # get sound ready
+                            # get sound ready
                             sound.stop()
                             sound.play(boom_sound)
                             show_alien()
@@ -304,9 +299,6 @@ def game_scene():
 def game_over_scene(final_score):
     # this function is the game over scene
 
-    # turn off sound from last scene
-    sound.stop()
-
     # image banks for CircuitPython
     image_bank_2 = stage.Bank.from_bmp16("mt_game_studio.bmp")
 
@@ -324,7 +316,7 @@ def game_over_scene(final_score):
         width=29,
         height=14,
         font=None,
-        palette=constants.BLUE_PALETTE,
+        palette=constants.RED_PALETTE,
         buffer=None
     )
     text1.move(22, 20)
@@ -335,7 +327,7 @@ def game_over_scene(final_score):
         width=29,
         height=14,
         font=None,
-        palette=constants.BLUE_PALETTE,
+        palette=constants.RED_PALETTE,
         buffer=None
     )
     text2.move(43, 60)
@@ -346,7 +338,7 @@ def game_over_scene(final_score):
         width=29,
         height=14,
         font=None,
-        palette=constants.BLUE_PALETTE,
+        palette=constants.RED_PALETTE,
         buffer=None
     )
     text3.move(32, 110)
