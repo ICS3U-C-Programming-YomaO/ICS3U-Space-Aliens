@@ -64,7 +64,6 @@ def splash_scene():
         time.sleep(2.0)
         menu_scene()
 
-
 def menu_scene():
     # this function is for the main game game_scene
 
@@ -81,6 +80,7 @@ def menu_scene():
     text2.move(40, 110)
     text2.text("PRESS START")
     text.append(text2)
+
 
     # set the background to image 0 in the image bank
     # and the size (10x8 tiles of size 16x16)
@@ -100,7 +100,7 @@ def menu_scene():
 
         if keys & ugame.K_START != 0:
             game_scene()
-
+ 
         #redraw sprite
         # redraws game sprites
         game.tick()
@@ -119,7 +119,19 @@ def game_scene():
     # function loops through all aliens and checks if an alien
     # has a position of < 0 and if it does ands takes it and puts it in a
     # random x position, and y will be at the top
+
+    # for lives
+    lives = 5
+    # lives settings: this will print and show player their score
+    lives_text = stage.Text(width=29, height=14)
+    lives_text.clear()
+    lives_text.cursor(0, 0)
+    lives_text.move(95, 1)
+    lives_text.text("Lives: {}".format(lives))
+
+
     def show_alien():
+        # this function takes an alien from off screen and moves it on screen
         # this function takes an alien from off screen and moves it on screen
         for alien_number in range(len(aliens)):
             if aliens[alien_number].x < 0:
@@ -128,7 +140,6 @@ def game_scene():
                     constants.OFF_TOP_SCREEN
                 )
                 break
-
     # image banks for CircuitPython stores the images in bmp file
     image_bank_background = stage.Bank.from_bmp16("space_aliens_background.bmp")
     image_bank_sprites = stage.Bank.from_bmp16("space_aliens.bmp")
@@ -178,7 +189,7 @@ def game_scene():
     game = stage.Stage(ugame.display, constants.FPS)
 
     # set the layers of all sprites, items show up in order
-    game.layers = [score_text] + aliens + lasers + [ship] + [background]
+    game.layers = [score_text, lives_text] + aliens + lasers + [ship] + [background]
     # render all sprites
     # most likely you will only render the background  once per game scene
     game.render_block()
@@ -187,6 +198,12 @@ def game_scene():
     while True:
         # get user input
         keys = ugame.buttons.get_pressed()
+        # speed boost when B button is pressed is held
+        if keys & ugame.K_X != 0:
+            speed = 10
+        else:
+            speed = constants.SPRITE_MOVEMENT_SPEED
+
         # A button to fire
         if keys & ugame.K_O != 0:
             if a_button == constants.button_state["button_up"]:
@@ -198,9 +215,6 @@ def game_scene():
                 a_button = constants.button_state["button_released"]
             else:
                 a_button = constants.button_state["button_up"]
-        # B button
-        if keys & ugame.K_X != 0:
-            pass
         if keys & ugame.K_START != 0:
             pass
         if keys & ugame.K_SELECT != 0:
@@ -209,12 +223,12 @@ def game_scene():
             # this code makes the sprite have boundaries, if it reaches the sides 
             # of the grid
             if ship.x <= constants.SCREEN_X - constants.SPRITE_SIZE:
-                ship.move((ship.x + constants.SPRITE_MOVEMENT_SPEED), ship.y)
+                ship.move(ship.x + speed, ship.y)
             else:
                 ship.move(constants.SCREEN_X - constants.SPRITE_SIZE, ship.y)
         if keys & ugame.K_LEFT != 0:
             if ship.x >= 0:
-                ship.move((ship.x - constants.SPRITE_MOVEMENT_SPEED), ship.y)
+                ship.move(ship.x - speed, ship.y)
             else:
                 ship.move(0, ship.y)
 
@@ -250,14 +264,15 @@ def game_scene():
 
                 if aliens[alien_number].y > constants.SCREEN_Y:
                     aliens[alien_number].move(constants.OFF_SCREEN_X,constants.OFF_SCREEN_Y)
-                show_alien()
-                score = score - 1
-                if score < 0:
-                    score = 0
-                score_text.clear()
-                score_text.cursor(0, 0)
-                score_text.move(1, 1)
-                score_text.text("My Score: {0}".format(score))
+                    show_alien()
+                    score -= 1
+                    if score < 0:
+                        score = 0
+
+                    score_text.clear()
+                    score_text.cursor(0, 0)
+                    score_text.move(1, 1)
+                    score_text.text("My Score: {0}".format(score))
 
         # each frame check if any of the lasers are touching any of the aliens
         for laser_number in range(len(lasers)):
@@ -289,8 +304,29 @@ def game_scene():
                     # alien hit the ship
                     sound.stop()
                     sound.play(crash_sound)
-                    time.sleep(3.0)
-                    game_over_scene(score)
+
+                    # ONE life lost every time user collides
+                    lives = lives - 1
+                    
+                    # clear and redraw lives text
+                    lives_text.clear()
+                    lives_text.cursor(0, 0)
+                    lives_text.move(95, 1)
+
+                    # update the lives, if lives is 1 it'll give the user a warning
+                    if lives == 1:
+                        lives_text.text("Lives: 1!")
+                    else:
+                        lives_text.text("Lives: {}".format(lives))
+
+                    game.render_block()
+
+                    time.sleep(0.5)
+                    # if all lives are lost, THEN it is a game over
+                    if lives <= 0:
+                        game_over_scene(score)
+                    else:
+                        aliens[alien_number].move(constants.OFF_SCREEN_X, constants.OFF_SCREEN_Y)
         #redraw sprite
         # redraws game sprites
         game.render_sprites( aliens + lasers + [ship])
@@ -369,4 +405,4 @@ def game_over_scene(final_score):
         game.tick()  # wait until refresh rate finishes
         
 if __name__ == "__main__":
-    menu_scene()
+    splash_scene()
